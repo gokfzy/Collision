@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.gokfzy.gui.MainGuiController">
+   <top>
+      <ToolBar prefHeight="27.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <SplitMenuButton fx:id="runButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false"
+                          onAction="#handleClickRunButton" onShowing="#setItems" styleClass="icon-split-button">
+            <graphic>
+               <SVGPath id="runButtonIcon" content="M17.887 12 L0 24 L0 0 L17.887 12 Z" fill="LIME"/>
+            </graphic>
+            <items>
+               <MenuItem mnemonicParsing="false" onAction="#clickAutoUpdateButton">
+                  <properties translation="gui.run.start_auto_update"/>
+               </MenuItem>
+            </items>
+         </SplitMenuButton>
+         <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#handleSetting"
+                 style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-width: 0; -fx-background-insets: 0; -fx-padding: 4;">
+            <graphic>
+               <SVGPath
+                       content="M15.372 3.713C13.178 2.804 10.712 2.804 8.517 3.713C6.322 4.622 4.579 6.366 3.670 8.561C2.761 10.755 2.761 13.221 3.670 15.416C4.579 17.610 6.322 19.354 8.517 20.263L9.513 17.859C7.957 17.213 6.720 15.976 6.075 14.420C5.430 12.863 5.430 11.114 6.075 9.557C6.763 8.000 7.957 6.763 9.513 6.118C11.070 5.473 12.819 5.473 14.376 6.118L15.372 3.713ZM2.352 4.646L4.381 7.165L7.096 4.450L4.577 2.421L2.352 4.646ZM0 13.452L3.216 13.798V9.960L0 10.306V13.452ZM10.409 0L10.063 3.216H13.902L13.556 0H10.409ZM4.542 21.482L7.061 19.452L4.347 16.738L2.317 19.256L4.542 21.482ZM8.507 20.259C10.702 21.168 13.169 21.168 15.362 20.259C17.555 19.350 19.350 17.606 20.210 15.410C21.119 13.217 21.119 10.751 20.210 8.556C19.350 6.361 17.557 4.618 15.362 3.709L14.366 6.114C15.923 6.759 17.160 7.995 17.805 9.552C18.450 11.109 18.450 12.858 17.805 14.415C17.209 15.972 15.923 17.209 14.366 17.854C12.809 18.498 11.060 18.498 9.503 17.854L8.507 20.259ZM21.528 19.326L19.498 16.807L16.784 19.521L19.303 21.551L21.528 19.326ZM23.880 10.519L20.663 10.173V14.012L23.880 13.666V10.519ZM13.470 23.972L13.815 20.756H9.978L10.323 23.972H13.470ZM19.337 2.490L16.819 4.520L19.533 7.234L21.563 4.715L19.337 2.490Z"/>
+            </graphic>
+         </Button>
+      </ToolBar>
+   </top>
+   <center>
+      <StackPane fx:id="canvasContainer">
+         <Region fx:id="view" maxHeight="Infinity" maxWidth="Infinity"/>
+         <Canvas fx:id="axisCanvas" mouseTransparent="true"/>
+      </StackPane>
+   </center>
+</BorderPane>
