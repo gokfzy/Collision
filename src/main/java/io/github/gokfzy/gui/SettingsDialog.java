@@ -1,6 +1,5 @@
 package io.github.gokfzy.gui;
 
-import io.github.gokfzy.core.util.Translation;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static io.github.gokfzy.core.util.util.translationString;
 
 public class SettingsDialog {
 
@@ -49,9 +50,9 @@ public class SettingsDialog {
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        Button applyBtn  = new Button(Translation.translationString("gui.setting.apply"));
-        Button cancelBtn = new Button(Translation.translationString("gui.setting.cancel"));
-        Button okBtn     = new Button(Translation.translationString("gui.setting.ok"));
+        Button applyBtn  = new Button(translationString("gui.setting.apply"));
+        Button cancelBtn = new Button(translationString("gui.setting.cancel"));
+        Button okBtn     = new Button(translationString("gui.setting.ok"));
         okBtn.setDefaultButton(true);
         cancelBtn.setCancelButton(true);
 

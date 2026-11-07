@@ -25,7 +25,7 @@ public class Config {
                 Map.entry("updated_step", 1),
                 Map.entry("update_interval", 1000),
                 Map.entry("enable_traceback", true),
-                Map.entry("language", "en_us")
+                Map.entry("language", "English")
         );
         config.putAll(defaultConfig);
     }
@@ -91,7 +91,7 @@ public class Config {
     private static boolean checkData(String key, Object value) {
         switch (key) {
             case "updated_step", "update_interval" -> { if ((Integer) value < 1) { return false; } }
-            case "language" ->{ if (!KEY_AND_LANGUAGE.containsKey((String) value)) { return false; } }
+            case "language" ->{ if (!LANGUAGE_AND_LOCALE.containsKey((String) value)) { return false; } }
         }
         return true;
     }

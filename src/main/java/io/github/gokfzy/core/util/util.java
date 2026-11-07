@@ -1,10 +1,14 @@
 package io.github.gokfzy.core.util;
 
+import io.github.gokfzy.core.Config;
 import io.github.gokfzy.core.util.block.blockAttribute.Data;
 import io.github.gokfzy.core.util.block.enums.Direction;
 import io.github.gokfzy.core.util.block.enums.Type;
 
 import java.util.List;
+import java.util.ResourceBundle;
+
+import static io.github.gokfzy.core.util.Constants.BASE_NAME;
 
 public class util {
 
@@ -54,5 +58,10 @@ public class util {
             return dataList[0];
         }
         return dataList[index + 1];
+    }
+
+    public static String translationString(String string) {
+        return ResourceBundle.getBundle(BASE_NAME, Constants.LANGUAGE_AND_LOCALE.get((String) Config.config.get("language")))
+                .getString(string);
     }
 }

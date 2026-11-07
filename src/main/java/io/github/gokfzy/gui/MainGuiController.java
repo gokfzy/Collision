@@ -1,7 +1,6 @@
 package io.github.gokfzy.gui;
 
 import io.github.gokfzy.core.Config;
-import io.github.gokfzy.core.util.Translation;
 import io.github.gokfzy.core.util.block.blockAttribute.Data;
 import io.github.gokfzy.core.util.block.blockAttribute.Pos;
 import io.github.gokfzy.core.util.block.enums.Direction;
@@ -35,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import static io.github.gokfzy.Main.*;
 import static io.github.gokfzy.core.util.Constants.*;
 import static io.github.gokfzy.core.util.util.nextData;
+import static io.github.gokfzy.core.util.util.translationString;
 
 public class MainGuiController {
 
@@ -115,7 +115,7 @@ public class MainGuiController {
     @FXML
     public void setItems() {
         for (MenuItem item : runButton.getItems()) {
-            item.setText(Translation.translationString((String) item.getProperties().get("translation")));
+            item.setText(translationString((String) item.getProperties().get("translation")));
         }
     }
 
@@ -135,22 +135,22 @@ public class MainGuiController {
 
     @FXML private void handleClickRunButton() { this.updateAndDraw(); }
     @FXML private void handleSetting() {
-        SettingsDialog dlg = new SettingsDialog(stage, Translation.translationString("gui.setting.setting"));
+        SettingsDialog dlg = new SettingsDialog(stage, translationString("gui.setting.setting"));
 
-        dlg.addSection(Translation.translationString("gui.setting.run"));
-        dlg.addIntField("delete_distance", Translation.translationString("gui.setting.survive_step"), (Integer) Config.config.get("delete_distance"));
-        dlg.addIntField("updated_step", Translation.translationString("gui.setting.updated_step_count"), (Integer) Config.config.get("updated_step"));
-        dlg.addIntField("update_interval", Translation.translationString("gui.setting.update_interval"), (Integer) Config.config.get("update_interval"));
-        dlg.addCheckBox("enable_traceback", Translation.translationString("gui.setting.enable_traceback"), (Boolean) Config.config.get("enable_traceback"));
+        dlg.addSection(translationString("gui.setting.run"));
+        dlg.addIntField("delete_distance", translationString("gui.setting.survive_step"), (Integer) Config.config.get("delete_distance"));
+        dlg.addIntField("updated_step", translationString("gui.setting.updated_step_count"), (Integer) Config.config.get("updated_step"));
+        dlg.addIntField("update_interval", translationString("gui.setting.update_interval"), (Integer) Config.config.get("update_interval"));
+        dlg.addCheckBox("enable_traceback", translationString("gui.setting.enable_traceback"), (Boolean) Config.config.get("enable_traceback"));
 
-        dlg.addSection(Translation.translationString("gui.setting.other"));
-        dlg.addComboBox("language", Translation.translationString("gui.setting.select_language"), List.of("English", "简体中文"), KEY_AND_LANGUAGE.get((String) Config.config.get("language")));
+        dlg.addSection(translationString("gui.setting.other"));
+        dlg.addComboBox("language", translationString("gui.setting.select_language"), List.of("English", "简体中文"), (String) Config.config.get("language"));
 
         dlg.setValidator(() -> {
             if (dlg.getInt("updated_step") < 1) {
-                return Translation.translationString("gui.setting.error_updated_step_count");
+                return translationString("gui.setting.error_updated_step_count");
             } else if (dlg.getInt("update_interval") < 1) {
-                return Translation.translationString("gui.setting.error_update_interval");
+                return translationString("gui.setting.error_update_interval");
             }
             return null;
         }).onApply(d -> updateConfig(dlg)).onOk(d -> {
@@ -358,7 +358,7 @@ public class MainGuiController {
         Config.config.put("updated_step", dlg.getInt("updated_step"));
         Config.config.put("update_interval", dlg.getInt("update_interval"));
         Config.config.put("enable_traceback", dlg.getBoolean("enable_traceback"));
-        Config.config.put("language", LANGUAGE_AND_KEY.get(dlg.getText("language")));
+        Config.config.put("language", dlg.getText("language"));
         try {
             Config.saveConfig();
         } catch (IOException e) {

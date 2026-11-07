@@ -1,41 +1,14 @@
-icon-split-button {
+.icon-split-button,
+.icon-split-button .arrow-button,
+.icon-split-button .label {
     -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-padding: 4 2 4 4;
-}
-
-.icon-split-button > .arrow-button {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-    -fx-border-width: 0;
-    -fx-border-color: transparent;
-    -fx-padding: 0 2 0 2;
-}
-
-.icon-split-button:hover,
-.icon-split-button:hover > .arrow-button {
-    -fx-background-color: #E0E0E0;
-    -fx-background-radius: 4;
-}
-
-.icon-split-button:pressed,
-.icon-split-button:pressed > .arrow-button,
-.icon-split-button:showing,
-.icon-split-button:showing > .arrow-button {
-    -fx-background-color: #C8C8C8;
-    -fx-background-radius: 4;
 }
 
 .icon-split-button:focused {
-    -fx-background-insets: 0;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
-.icon-split-button .arrow {
-    -fx-background-color: #333333;
+.icon-split-button .arrow-button {
+    -fx-padding: 0 0.10em 0 0.10em;
 }
