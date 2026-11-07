@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.input.MouseEvent;
@@ -109,6 +110,9 @@ public class MainGuiController {
             camX = axisCanvas.getWidth() / 2;
             camY = axisCanvas.getHeight() / 2;
             requestRedraw();
+            if (!Config.isSetLanguage()) {
+                choiceLanguage();
+            }
         });
     }
 
@@ -144,7 +148,7 @@ public class MainGuiController {
         dlg.addCheckBox("enable_traceback", translationString("gui.setting.enable_traceback"), (Boolean) Config.config.get("enable_traceback"));
 
         dlg.addSection(translationString("gui.setting.other"));
-        dlg.addComboBox("language", translationString("gui.setting.select_language"), List.of("English", "简体中文"), (String) Config.config.get("language"));
+        dlg.addComboBox("language", translationString("gui.setting.select_language"), List.copyOf(LANGUAGE_AND_TAG.keySet()), TAG_AND_LANGUAGE.get((String) Config.config.get("language")));
 
         dlg.setValidator(() -> {
             if (dlg.getInt("updated_step") < 1) {
@@ -353,16 +357,34 @@ public class MainGuiController {
         }
     }
 
-    private static void updateConfig(SettingsDialog dlg) {
+    private void updateConfig(SettingsDialog dlg) {
         Config.config.put("delete_distance", dlg.getInt("delete_distance"));
         Config.config.put("updated_step", dlg.getInt("updated_step"));
         Config.config.put("update_interval", dlg.getInt("update_interval"));
         Config.config.put("enable_traceback", dlg.getBoolean("enable_traceback"));
-        Config.config.put("language", dlg.getText("language"));
+        Config.config.put("language", LANGUAGE_AND_TAG.get(dlg.getText("language")));
         try {
             Config.saveConfig();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void choiceLanguage() {
+        List<String> options = List.copyOf(LANGUAGE_AND_TAG.keySet());
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(TAG_AND_LANGUAGE.get((String) Config.config.get("language")), options);
+        dialog.setTitle(translationString("gui.setting.select_language"));
+        dialog.setHeaderText(translationString("gui.setting.select_language") + ":");
+
+        String result = dialog.showAndWait().orElse(null);
+
+        if (result != null) {
+            Config.config.put("language", LANGUAGE_AND_TAG.get(result));
+            try {
+                Config.saveConfig();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

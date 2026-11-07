@@ -11,21 +11,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static io.github.gokfzy.core.util.Constants.*;
 
 public class Config {
     public static Map<String, Object> config = new HashMap<>();
-    public static Map<String, Object> defaultConfig;
+    private static final Map<String, Object> defaultConfig;
     private static final Path CONFIG_PATH = resolveWritablePath();
+    private static boolean SET_LANGUAGE;
     static {
         defaultConfig = Map.ofEntries(
                 Map.entry("delete_distance", 1),
                 Map.entry("updated_step", 1),
                 Map.entry("update_interval", 1000),
                 Map.entry("enable_traceback", true),
-                Map.entry("language", "English")
+                Map.entry("language", Locale.getDefault(Locale.Category.DISPLAY).toLanguageTag())
         );
         config.putAll(defaultConfig);
     }
@@ -68,7 +70,8 @@ public class Config {
                 if (!checkConfig()) {
                     config.clear();
                     config.putAll(defaultConfig);
-                }
+                    SET_LANGUAGE = false;
+                } else { SET_LANGUAGE = true; }
             }
         }
     }
@@ -91,7 +94,7 @@ public class Config {
     private static boolean checkData(String key, Object value) {
         switch (key) {
             case "updated_step", "update_interval" -> { if ((Integer) value < 1) { return false; } }
-            case "language" ->{ if (!LANGUAGE_AND_LOCALE.containsKey((String) value)) { return false; } }
+            case "language" ->{ if (Locale.forLanguageTag((String) value).equals(Locale.ROOT)) { return false; } }
         }
         return true;
     }
@@ -118,5 +121,9 @@ public class Config {
         } finally {
             Files.deleteIfExists(tmp);
         }
+    }
+
+    public static boolean isSetLanguage() {
+        return SET_LANGUAGE;
     }
 }
