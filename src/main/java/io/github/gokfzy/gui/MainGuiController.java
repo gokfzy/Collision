@@ -88,11 +88,11 @@ public class MainGuiController {
         view.setOnMouseClicked(this::onClicked);
         view.setOnScroll(this::onScroll);
 
-        canvasContainer.widthProperty().addListener((o, ov, nv) -> {
+        canvasContainer.widthProperty().addListener((_, _, nv) -> {
             axisCanvas.setWidth(nv.doubleValue());
             requestRedraw();
         });
-        canvasContainer.heightProperty().addListener((o, ov, nv) -> {
+        canvasContainer.heightProperty().addListener((_, _, nv) -> {
             axisCanvas.setHeight(nv.doubleValue());
             requestRedraw();
         });
@@ -153,7 +153,7 @@ public class MainGuiController {
                 return translationString("gui.setting.error_update_interval");
             }
             return null;
-        }).onApply(d -> updateConfig(dlg)).onOk(d -> {
+        }).onApply(_ -> updateConfig(dlg)).onOk(d -> {
             updateConfig(dlg);
             d.close();
         }).show();
