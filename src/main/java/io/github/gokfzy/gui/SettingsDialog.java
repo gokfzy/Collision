@@ -56,11 +56,11 @@ public class SettingsDialog {
         okBtn.setDefaultButton(true);
         cancelBtn.setCancelButton(true);
 
-        applyBtn.setOnAction(e -> { if (validateAndMark()) fireApply(); });
-        okBtn.setOnAction(e -> {
+        applyBtn.setOnAction(_ -> { if (validateAndMark()) fireApply(); });
+        okBtn.setOnAction(_ -> {
             if (validateAndMark()) { fireApply(); fireOk(); close(); }
         });
-        cancelBtn.setOnAction(e -> close());
+        cancelBtn.setOnAction(_ -> close());
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -174,7 +174,7 @@ public class SettingsDialog {
         btn.setMinWidth(150);
         btn.setPrefWidth(150);
         btn.setTooltip(new Tooltip(btn.getText()));
-        btn.setOnAction(e -> { reSetter.run(); statusLabel.setText(""); });
+        btn.setOnAction(_ -> { reSetter.run(); statusLabel.setText(""); });
 
         if (control instanceof Region r) {
             HBox.setHgrow(r, Priority.ALWAYS);
