@@ -21,7 +21,7 @@ public final class Memory implements Iterable<Map.Entry<Pos, Data>> {
         return v == null ? Data.empty() : v;
     }
 
-    public Data get (BigInteger x, BigInteger y) {
+    public Data get(BigInteger x, BigInteger y) {
         return get(new Pos(x, y));
     }
 

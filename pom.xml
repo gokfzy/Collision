@@ -24,7 +24,19 @@
         <jpackage.type>EXE</jpackage.type>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jpro</id>
+            <url>https://sandec.jfrog.io/artifactory/repo</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>one.jpro.platform</groupId>
+            <artifactId>jpro-mdfx</artifactId>
+            <version>0.5.6</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>

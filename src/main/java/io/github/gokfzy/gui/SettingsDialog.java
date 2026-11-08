@@ -81,7 +81,7 @@ public class SettingsDialog {
         return tf;
     }
 
-        public void addNumberField(String key, String label, double defaultValue) {
+    public void addNumberField(String key, String label, double defaultValue) {
         TextField tf = new TextField(String.valueOf(defaultValue));
         addRow(key, label, tf,
                 () -> {
@@ -135,7 +135,7 @@ public class SettingsDialog {
 
     private Object getValue(String key) {
         ConfigItem item = items.get(key);
-        if (item == null) throw new IllegalArgumentException("未找到配置项: " + key);
+        if (item == null) throw new IllegalArgumentException("Config error:" + key);
         return item.getter.get();
     }
 

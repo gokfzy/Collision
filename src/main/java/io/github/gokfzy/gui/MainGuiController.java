@@ -1,9 +1,11 @@
 package io.github.gokfzy.gui;
 
 import io.github.gokfzy.core.Config;
+import io.github.gokfzy.core.util.BigIntegerPack;
 import io.github.gokfzy.core.util.block.blockAttribute.Data;
 import io.github.gokfzy.core.util.block.blockAttribute.Pos;
 import io.github.gokfzy.core.util.block.enums.Direction;
+import io.github.gokfzy.core.util.block.enums.Type;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -77,7 +79,7 @@ public class MainGuiController {
     };
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "ms-timer");
             t.setDaemon(true);
@@ -117,14 +119,14 @@ public class MainGuiController {
     }
 
     @FXML
-    public void setItems() {
+    private void setItems() {
         for (MenuItem item : runButton.getItems()) {
             item.setText(translationString((String) item.getProperties().get("translation")));
         }
     }
 
     @FXML
-    public void clickAutoUpdateButton() {
+    private void clickAutoUpdateButton() {
         if (enableAutoUpdate) {
             runButton.getItems().getFirst().getProperties().put("translation", "gui.run.start_auto_update");
             future.cancel(true);
@@ -163,23 +165,23 @@ public class MainGuiController {
         }).show();
     }
 
-    public void addArrow(BigInteger col, BigInteger row, Color color) { addArrow(col, row, 0, color); }
+    private void addArrow(BigInteger col, BigInteger row, Color color) { addArrow(col, row, 0, color); }
 
-    public void addArrow(BigInteger col, BigInteger row, double rotationDegrees, Color color) {
+    private void addArrow(BigInteger col, BigInteger row, double rotationDegrees, Color color) {
         runOnFxThread(() -> {
             drawables.add(new Arrow(col, row, rotationDegrees, color));
             requestRedraw();
         });
     }
 
-    public void addCellFill(BigInteger col, BigInteger row, Color color) {
+    private void addCellFill(BigInteger col, BigInteger row, Color color) {
         runOnFxThread(() -> {
             drawables.add(new CellFill(col, row, color));
             requestRedraw();
         });
     }
 
-    public void clearDrawables() {
+    private void clearDrawables() {
         runOnFxThread(() -> { drawables.clear(); requestRedraw(); });
     }
 
@@ -238,6 +240,7 @@ public class MainGuiController {
 
         Data oldData = memory.get(col, row);
         memory.set(col, row, nextData(oldData));
+        this.clearDrawables();
         drawMemory();
     }
 
@@ -322,39 +325,43 @@ public class MainGuiController {
             gc.setFill(color);
             gc.fill();
             gc.setStroke(color);
-            gc.setLineWidth(0.05);
+            gc.setLineWidth(0.02);
             gc.stroke();
         } finally {
             gc.restore();
         }
     }
 
-    private void drawMemory() {
-        this.clearDrawables();
+
+    private void drawMemory(boolean isTraceback) {
+        Color arrowColor = isTraceback ? Color.BLACK.deriveColor(0, 1, 1, 0.25) : Color.BLACK;
         for (Map.Entry<Pos, Data> entry : memory) {
             Pos pos = entry.getKey();
             Data data = entry.getValue();
-            this.addCellFill(pos.x(), pos.y(), TYPE_AND_COLOR.get(data.type()));
-            for (Direction direction : data.directionList()) {
+            this.addCellFill(pos.x(), pos.y(), isTraceback ? TYPE_AND_COLOR.get(data.type()).deriveColor(0, 1, 1, 0.25) : TYPE_AND_COLOR.get(data.type()));
+            for (Direction direction : data.directionSet()) {
                 switch (direction) {
-                    case UP -> this.addArrow(pos.x(), pos.y(), Color.BLACK);
-                    case RIGHT -> this.addArrow(pos.x(), pos.y(), 90, Color.BLACK);
-                    case DOWN -> this.addArrow(pos.x(), pos.y(), 180, Color.BLACK);
-                    case LEFT -> this.addArrow(pos.x(), pos.y(), 270, Color.BLACK);
+                    case UP -> this.addArrow(pos.x(), pos.y(), arrowColor);
+                    case RIGHT -> this.addArrow(pos.x(), pos.y(), 90, arrowColor);
+                    case DOWN -> this.addArrow(pos.x(), pos.y(), 180, arrowColor);
+                    case LEFT -> this.addArrow(pos.x(), pos.y(), 270, arrowColor);
                 }
             }
         }
     }
 
+    private void drawMemory() {
+        drawMemory(false);
+    }
+
     private void updateAndDraw() {
+        this.clearDrawables();
+        if ((Boolean) Config.config.get("enable_traceback")) drawMemory(true);
         for (int i = 0; i < (Integer) Config.config.get("updated_step"); i++) {
             run.update();
         }
-        if (Platform.isFxApplicationThread()) {
-            drawMemory();
-        } else {
-            Platform.runLater(this::drawMemory);
-        }
+        drawMemory();
+        afterUpdate();
     }
 
     private void updateConfig(SettingsDialog dlg) {
@@ -386,6 +393,42 @@ public class MainGuiController {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void afterUpdate() {
+        Map<Pos, Data> snapshot = memory.getBlockMap();
+        final BigIntegerPack leftBorder = new BigIntegerPack(null, true);
+        final BigIntegerPack rightBorder = new BigIntegerPack(null, false);
+        final BigIntegerPack bottomBorder = new BigIntegerPack(null, true);
+        final BigIntegerPack topBorder = new BigIntegerPack(null, false);
+
+        BigInteger steps = BigInteger.valueOf(((Number) Config.config.get("delete_distance")).longValue());
+
+        snapshot.forEach( (pos, data) -> {
+            if (data.type() == Type.FACTORY) {
+                if (leftBorder.compareTo(pos.x().subtract(steps)) > 0) {
+                    leftBorder.setInteger(pos.x().subtract(steps));
+                }
+                if (rightBorder.compareTo(pos.x().add(steps)) < 0) {
+                    rightBorder.setInteger(pos.x().add(steps));
+                }
+                if (bottomBorder.compareTo(pos.y().subtract(steps)) > 0) {
+                    bottomBorder.setInteger(pos.y().subtract(steps));
+                }
+                if (topBorder.compareTo(pos.y().add(steps)) < 0) {
+                    topBorder.setInteger(pos.y().add(steps));
+                }
+            }
+        });
+        snapshot.entrySet().stream().filter(entry -> entry.getValue().type() == Type.MOVING_BLOCK).forEach(entry -> {
+                Pos pos = entry.getKey();
+
+                if (leftBorder.compareTo(pos.x()) + rightBorder.compareTo(pos.x()) != 0 ||
+                        topBorder.compareTo(pos.y()) + bottomBorder.compareTo(pos.y()) != 0) {
+                    memory.set(pos, Data.empty());
+                }
+            }
+        );
     }
 
     public void shutdown() {

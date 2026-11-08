@@ -3,20 +3,23 @@ package io.github.gokfzy.core.util.block.blockAttribute;
 import io.github.gokfzy.core.util.block.enums.Direction;
 import io.github.gokfzy.core.util.block.enums.Type;
 
-import java.util.List;
+import java.util.*;
 
-public record Data(Type type, List<Direction> directionList) {
+public record Data(Type type, Set<Direction> directionSet) {
     public Data {
-        directionList = directionList == null
-                ? List.of()
-                : List.copyOf(directionList);
+        directionSet = directionSet == null || directionSet.isEmpty()
+                ? Set.of()
+                : Collections.unmodifiableSet(EnumSet.copyOf(directionSet));
+        if (directionSet.size() > 4) {
+            throw new IllegalArgumentException("directionSet error:" + directionSet);
+        }
     }
 
-    public static Data of(Type type, List<Direction> directionList) {
+    public static Data of(Type type, Set<Direction> directionList) {
         return new Data(type, directionList);
     }
 
     public static Data empty() {
-        return Data.of(Type.NONE, List.of());
+        return Data.of(Type.NONE, Set.of());
     }
 }

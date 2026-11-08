@@ -5,9 +5,9 @@ import io.github.gokfzy.core.util.block.blockAttribute.Data;
 import io.github.gokfzy.core.util.block.enums.Direction;
 import io.github.gokfzy.core.util.block.enums.Type;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import static io.github.gokfzy.core.util.Constants.BASE_NAME;
 
@@ -35,16 +35,9 @@ public class util {
 
     public static Data nextData(Data data) {
         Data[] dataList = {
-                Data.of(Type.NONE, List.of()),
-                Data.of(Type.MOVING_BLOCK, List.of(Direction.UP)),
-                Data.of(Type.MOVING_BLOCK, List.of(Direction.RIGHT)),
-                Data.of(Type.MOVING_BLOCK, List.of(Direction.DOWN)),
-                Data.of(Type.MOVING_BLOCK, List.of(Direction.LEFT)),
-                Data.of(Type.COLLISION, List.of(Direction.UP, Direction.DOWN)),
-                Data.of(Type.COLLISION, List.of(Direction.LEFT, Direction.RIGHT)),
-                Data.of(Type.FACTORY, List.of()),
-                Data.of(Type.PROCESSING, List.of(Direction.UP, Direction.DOWN)),
-                Data.of(Type.PROCESSING, List.of(Direction.LEFT, Direction.RIGHT)),
+                Data.of(Type.NONE, Set.of()),
+                Data.of(Type.MOVING_BLOCK, Set.of(Direction.UP)),
+                Data.of(Type.FACTORY, Set.of()),
         };
         if (data.equals(dataList[dataList.length - 1])) {
             return dataList[0];
