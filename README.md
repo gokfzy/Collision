@@ -64,7 +64,7 @@
 
 - JDK 27（`pom.xml` 中 `maven.compiler.release=27`，请确保 `java -version` 和 `javac -version` 均为 27）
 - Maven 3.8+
-- Windows 10/11（当前项目默认 `jpackage.type=EXE`，用于生成 Windows 安装包）
+- Windows 10/11
 - 生成 EXE 安装包需要 JDK 自带的 `jpackage` 工具，并安装 WiX Toolset（jpackage 生成 Windows EXE/MSI 安装包所需）
 
 ### 克隆项目
